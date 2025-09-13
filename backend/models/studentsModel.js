@@ -1,16 +1,38 @@
-import mongoose,{Schema} from "mongoose"
+import mongoose from "mongoose";
 
-const studentSchema = new Schema({
-    profilePic:String,
-    name:String,
-    age:Number,
-    grade:Number,
-    courseId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Course"
-    }
+const { Schema } = mongoose;
 
-})
+const studentSchema = new Schema(
+  {
+    profilePic: {
+      type: String,
+      default: "", 
+    },
+    name: {
+      type: String,
+      required: [true, "Student name is required"],
+     
+    },
+    age: {
+      type: Number,
+      min: [5, "Age must be at least 5"],
+      max: [100, "Age must be less than 100"],
+    },
+    grade: {
+      type: Number,
+      min: [1, "Grade must be at least 1"],
+      max: [12, "Grade must be at most 12"],
+    },
+    courseId: {
+      type: Schema.Types.ObjectId,
+      ref: "Course",
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+   
+  }
+);
 
- const Student = mongoose.model("Student",studentSchema)
- export default Student
+export default mongoose.model("Student", studentSchema);

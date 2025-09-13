@@ -1,52 +1,20 @@
-
 import { Router } from "express";
-import student from '../models/studentsModel.js'
-const router = Router()
+import { getStudents, getStudentById, addStudent, deleteStudent } from "../controller/studentsController.js";
 
-router.get("/", (req, res) => {
-    res.json({
-        message: "Hello by student api"
-    })
-})
-
-router.get("/getList", async (req, res) => {
-    try {
-        const allStudent = await student.find({})  //modelMese data ko nikalna
-        res.json(allStudent)
-    } catch (error) {
-        res.json({ message: error })
-    }
-})
-
-router.get("/:id", async (req, res) => {
-    try {
-        const studentid = await student.findById(req.params.id)  //modelMese data ko nikalna
-        res.json(studentid)
-    } catch (error) {
-        res.json({ message: error })
-    }
-})
-
-router.post("/add", async (req, res) => {
-
-    const studentData = await student.create({
-        profilePic: req.body. profilePic,
-        name: req.body.name,
-        age: req.body.age,
-        grade:req.body.grade,
-        courseId: req.body.courseId,
-        
-    })
-
-    try {
-        const savestudent = await studentData.save();
-        res.json(savestudent)
-
-    } catch (error) {
-        res.json({ message: error })
-
-    }
-})
+const router = Router();
 
 
-export default router
+// main routes
+
+//api/student/getList
+//api/student/:id
+//api/student/add
+//api/student/delete/:id
+
+
+router.get("/getList", getStudents);
+router.get("/:id", getStudentById);
+router.post("/add", addStudent);
+router.delete("/delete/:id", deleteStudent);
+
+export default router;

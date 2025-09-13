@@ -1,12 +1,33 @@
-import mongoose,{Schema} from "mongoose"
+import mongoose from "mongoose";
 
-const teacherSchema = new Schema({
-    profilePic:String,
-    name:String,
-    age:Number,
-    exp:Number
+const { Schema } = mongoose;
 
-})
+const teacherSchema = new Schema(
+  {
+    profilePic: {
+      type: String,
+      default: "", 
+    },
+    name: {
+      type: String,
+      required: [true, "Teacher name is required"],
+    
+    },
+    age: {
+      type: Number,
+      min: [18, "Teacher must be at least 18 years old"],
+      max: [100, "Age must be less than 100"],
+    },
+    exp: {
+      type: Number,
+      min: [0, "Experience cannot be negative"],
+      default: 0, 
+    },
+  },
+  {
+    timestamps: true,  
+   
+  }
+);
 
- const Teacher = mongoose.model("Teacher",teacherSchema)
- export default Teacher
+export default mongoose.model("Teacher", teacherSchema);

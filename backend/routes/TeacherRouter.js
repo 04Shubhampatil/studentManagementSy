@@ -1,51 +1,18 @@
-
 import { Router } from "express";
-import Teacher from '../models/techerModel.js'
-const router = Router()
+import { getTeachers, getTeacherById, addTeacher, deleteTeacher } from "../controller/techerController.js";
 
-router.get("/", (req, res) => {
-    res.json({
-        message: "Hello by teacher api"
-    })
-})
-
-router.get("/getList", async (req, res) => {
-    try {
-        const allTeacher = await Teacher.find({})  //modelMese data ko nikalna
-        res.json(allTeacher)
-    } catch (error) {
-        res.json({ message: error })
-    }
-})
+const router = Router();
 
 
-router.get("/:id", async (req, res) => {
-    try {
-        const teacherid = await Teacher.findById(req.params.id)  //modelMese data ko nikalna
-        res.json(teacherid)
-    } catch (error) {
-        res.json({ message: error })
-    }
-})
 
 
-router.post("/add", async (req, res) => {
+//api/teacher/getList
+//api/teacher/:id
+//api/teacher/add
+//api/teacher/delete/:id
+router.get("/getList", getTeachers);
+router.get("/:id", getTeacherById);
+router.post("/add", addTeacher);
+router.delete("/delete/:id", deleteTeacher);
 
-    const teacherData = await Teacher.create({
-        profilePic: req.body.profilePic,
-        name: req.body.name,
-        age: req.body.age,
-        exp: req.body.exp
-    })
-
-    try {
-        const saveTeacher = await teacherData.save();
-        res.json(saveTeacher)
-
-    } catch (error) {
-        res.json({ message: error })
-
-    }
-})
-
-export default router
+export default router;
