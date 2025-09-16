@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getStudents, getStudentById, addStudent, deleteStudent } from "../controller/studentsController.js";
+import authMiddleware from '../middleware/authMiddleware.js'
 
 const router = Router();
 
@@ -12,9 +13,9 @@ const router = Router();
 //api/student/delete/:id
 
 
-router.get("/getList", getStudents);
-router.get("/:id", getStudentById);
-router.post("/add", addStudent);
-router.delete("/delete/:id", deleteStudent);
+router.get("/getList", authMiddleware, getStudents);
+router.get("/:id",authMiddleware, getStudentById);
+router.post("/add",authMiddleware, addStudent);
+router.delete("/delete/:id",authMiddleware, deleteStudent);
 
 export default router;

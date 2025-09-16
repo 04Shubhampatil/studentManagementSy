@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     try {
         // 1. Get token from cookies
         const token = req.cookies.token;
@@ -14,6 +15,15 @@ const authMiddleware = (req, res, next) => {
 
         // 2. Verify token
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+        // 3. Fetch user from DB (excluding password)
+        const user = await User.findById(decoded.id).select("-password");
+        if (!user) {
+            return res.status(401).json({
+                message: "User not found, authorization denied",
+                success: false,
+            });
+        }
 
         // 3. Attach user data to request
         req.user = decoded;
