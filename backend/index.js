@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config"
 import bodyParser from "body-parser";
 import connectDB from "./DB/DB.js";
+import cookieParser from "cookie-parser";
 
 //!import routes
 
@@ -13,6 +14,8 @@ import CourseRouter from "./routes/CourseRouter.js"
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
+app.use(cookieParser());
+
 
 
 connectDB().then(() => console.log("DB connected.."))
