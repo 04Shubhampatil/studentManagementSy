@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import TeacherRouter from "./routes/TeacherRouter.js"
 import StudentRouter from "./routes/StudentRouter.js"
 import CourseRouter from "./routes/CourseRouter.js"
+import UserRouter from "./routes/UserRouter.js"
 
 const app = express()
 app.use(cors())
@@ -22,6 +23,7 @@ connectDB().then(() => console.log("DB connected.."))
 
 //API
 
+app.use("/api/user",UserRouter)
 app.use("/api/teacher",TeacherRouter)
 app.use("/api/student",StudentRouter)
 app.use("/api/course",CourseRouter)

@@ -14,6 +14,7 @@ pids
 *.seed
 *.pid.lock
 
+
 # Environment variables
 .env
 .env.local
@@ -27,7 +28,7 @@ build/
 .vscode/
 .idea/
 *.swp
-
+*auth.t
 # OS specific
 .DS_Store
 Thumbs.db

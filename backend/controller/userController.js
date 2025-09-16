@@ -1,13 +1,14 @@
 
-import User from "../models/userModel";
+import User from "../models/userModel.js";
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
-const getProfile  = async (req, res) => {
+const getProfile = async (req, res) => {
     try {
         const getdata = await User.find({})
         res.json(getdata)
     } catch (error) {
-            res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
 
     }
 
@@ -64,7 +65,7 @@ const login = async (req, res) => {
     try {
         const { email, password, role } = req.body;
 
-        // 1. Check if fields are provided
+
         if (!email || !password || !role) {
             return res.status(400).json({
                 message: "All fields are required",
@@ -72,7 +73,7 @@ const login = async (req, res) => {
             });
         }
 
-        // 2. Find user by email
+
         let user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
@@ -81,7 +82,6 @@ const login = async (req, res) => {
             });
         }
 
-        // 3. Compare password
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
             return res.status(400).json({
@@ -90,7 +90,6 @@ const login = async (req, res) => {
             });
         }
 
-        // 4. Check role
         if (role !== user.role) {
             return res.status(400).json({
                 message: "Account doesn't exist with current role",
@@ -98,21 +97,20 @@ const login = async (req, res) => {
             });
         }
 
-        // 5. Create token
-        const tokenData = { id: user._id, email: user.email, role: user.role };
-        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
 
-        // 6. Remove sensitive data
+        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "1d" });
+
+
         user = {
             _id: user._id,
-            fullname: user.fullname,
+            name: user.name,
             email: user.email,
             phoneNumber: user.phoneNumber,
             role: user.role,
             profile: user.profile
         };
 
-        // 7. Send response
+
         return res
             .status(200)  // Set HTTP status code to 200 OK
             .cookie("token", token, {   // Set a cookie named "token"
@@ -152,4 +150,30 @@ const logout = async (req, res) => {
     }
 }
 
-export { getProfile, register, login, logout }
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email, age, profilePic } = req.body;
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (age) user.age = age;
+    if (profilePic) user.profilePic = profilePic;
+
+    await user.save();
+
+    res.json({
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+export { getProfile, register, login, logout, updateProfile };

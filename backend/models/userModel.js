@@ -23,12 +23,13 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'user'],
+        enum: ['admin', 'student'],
         default: 'user',
         required: true
     },
     age: {
-        type: nmber
+        type: Number,
+        required: true
     },
     createdAt: {
         type: Date,
